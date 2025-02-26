@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\UniqueConstraintViolationException;
+use Illuminate\Support\Str;
 
 class AuthenticationController extends Controller
 {
@@ -18,12 +19,15 @@ class AuthenticationController extends Controller
             return response()->json(['User already logged in'], 400);
         }
 
+        $salt = Str::random(64);
+
         // Tries to create user with supplied credentials. If the 'unique' constraint is violated, an exception is thrown, and the function returns a 400.
         try {
             User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'salt' => $salt,
+                'password' => Hash::make($request->password.$salt), // The salt is stored in its own field on the user, and also appended to the password before it is hashed.
             ]);
         } catch (UniqueConstraintViolationException $e) {
             return response()->json(['User already exists'], 400);
@@ -41,7 +45,7 @@ class AuthenticationController extends Controller
         // If no user exists with the supplied email, this block is skipped, and 404 is thrown.
         if ($user) {
             // If user exists, supplied password is hashed and compared to password in user record.
-            if (Hash::check($request->password, $user->password)) {
+            if (Hash::check($request->password.$user->salt, $user->password)) {
                 // Deletes existing access tokens on user.
                 $user->tokens()->delete();
 
