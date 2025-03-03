@@ -7,6 +7,7 @@ use App\Http\Requests\DeactivateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -39,18 +40,20 @@ class UserController extends Controller
         $salt = Str::random(64);
 
         if ($user) {
-            $user->update([
-                'name' => $request->name ?? $user->name,
-                'email' => $request->email ?? $user->email,
-                'password' => $request->password.Str::random(64) ?? $user->password,
-                'salt' => $request->password ? $salt : $user->salt
-            ]);
 
+            $user->name = $request->name ?? $user->name;
+            $user->email = $request->email ?? $user->email;
+
+            if ($request->password) {
+                $user->password = Hash::make($request->password.$salt);
+                $user->salt = $salt;
+            }
+
+            $user->save();
             return response()->json($user, 200);
         }
 
         return response()->json(['User not found'], 404);
-
     }
 
     public function deactivateUser(DeactivateUserRequest $request, $id) {
