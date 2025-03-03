@@ -12,4 +12,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user/{id}', ['App\Http\Controllers\UserController', 'getUserById']);
     Route::patch('/user/{id}', ['App\Http\Controllers\UserController', 'changeUserInfo']);
     Route::delete('/user/{id}', ['App\Http\Controllers\UserController', 'deactivateUser']);
+    Route::post('/user/follow/{id}', ['App\Http\Controllers\UserController', 'followUser']);
 });

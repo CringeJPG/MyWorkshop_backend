@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChangeUserInfoRequest;
 use App\Http\Requests\DeactivateUserRequest;
 use App\Models\User;
+use App\Models\UserFollowsUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -65,5 +66,33 @@ class UserController extends Controller
         }
 
         return response()->json(['User not found'], 404);
+    }
+
+    public function followUser(Request $request, $id) {
+        // Checks if user is already following user
+        $following = UserFollowsUser::where([
+            'user_id' => Auth::user()->id,
+            'followed_user_id' => $id
+        ])->first();
+
+        if (!$following && Auth::user()->id != $id) {
+            UserFollowsUser::create([
+                'user_id' => Auth::user()->id,
+                'followed_user_id' => $id
+            ]);
+
+            return response()->json(['Successfully followed user'], 200);
+        }
+        else if ($following && Auth::user()->id != $id) {
+            UserFollowsUser::where([
+                'user_id' => Auth::user()->id,
+                'followed_user_id' => $id
+            ])->delete();
+
+            return response()->json(['Successfully unfollowed user'], 200);
+
+        }
+
+        return response()->json(['Could not perform the requested action on user'], 500);
     }
 }
