@@ -102,7 +102,7 @@ class CommentController extends Controller
     public function getCommentsByPostId($id)
     {
         try {
-            $comment = Comment::where($id->post_id);
+            $comment = Comment::where(['post_id'=>$id]);
 
             return response()->json([
                 'status' => true,
