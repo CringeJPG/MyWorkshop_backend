@@ -13,7 +13,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::patch('/user/{id}', ['App\Http\Controllers\UserController', 'changeUserInfo']);
     Route::delete('/user/{id}', ['App\Http\Controllers\UserController', 'deactivateUser']);
     Route::post('/user/follow/{id}', ['App\Http\Controllers\UserController', 'followUser']);
-
     
     Route::post('/post', ['App\Http\Controllers\PostController', 'store']);
     Route::patch('/post/{id}', ['App\Http\Controllers\PostController', 'update']);
