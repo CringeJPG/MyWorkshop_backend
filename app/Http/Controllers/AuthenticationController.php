@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LogInRequest;
+use App\Http\Requests\LogOutRequest;
 use App\Http\Requests\SignUpRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -60,7 +61,7 @@ class AuthenticationController extends Controller
         return response()->json(['Email or password not found'], 404);
     }
 
-    public function logOut(Request $request)
+    public function logOut(LogOutRequest $request)
     {
         // Deletes users current access token.
         Auth::user()->tokens()->delete();
