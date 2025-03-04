@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
-            $table->id();
-            $table->string('url');
-            $table->timestamps();
+        Schema::table('groups', function (Blueprint $table) {
+            $table->foreignId('image_id')->constrained();
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::table('groups', function (Blueprint $table) {
+            //
+        });
     }
 };
