@@ -60,7 +60,6 @@ class PostController extends Controller
             $validateRequest = Validator::make($request->all(), [
                 'title' => 'required|string|min:1',
                 'content' => 'required|string|min:1',
-                'user_id' => 'required|numeric|min:1',
                 'group_id' => 'nullable|numeric|min:1'
             ]);
 
