@@ -10,6 +10,6 @@ class Image extends Model
     protected $fillable = [
         'image',
         'url',
-        "post_id"
+        'post_id'
     ];
 }

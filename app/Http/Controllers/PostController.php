@@ -60,7 +60,6 @@ class PostController extends Controller
             $validateRequest = Validator::make($request->all(), [
                 'title' => 'required|string|min:1',
                 'content' => 'required|string|min:1',
-                'user_id' => 'required|numeric|min:1',
                 'group_id' => 'nullable|numeric|min:1'
             ]);
 
@@ -74,7 +73,7 @@ class PostController extends Controller
                 'title' => $request->title,
                 'content' => $request->content,
                 'user_id' => Auth::user()->id,
-                'group_id' => $request->group_id ?? null
+                'group_id' => $request->group_id
             ]);
 
             return response()->json([
