@@ -27,7 +27,7 @@ class PostController extends Controller
                 ], 401);
             }
 
-            if ($request->user_id == null) {
+            if (!$request->user_id) {
                 $posts = Post::paginate(
                     perPage: $request->perPage ?? 10,
                     page: $request->page ?? 1,
