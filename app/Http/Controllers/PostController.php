@@ -73,7 +73,7 @@ class PostController extends Controller
                 'title' => $request->title,
                 'content' => $request->content,
                 'user_id' => Auth::user()->id,
-                'group_id' => $request->group_id ?? null
+                'group_id' => $request->group_id
             ]);
 
             return response()->json([
