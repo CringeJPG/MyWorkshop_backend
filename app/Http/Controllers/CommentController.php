@@ -12,11 +12,11 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function getCommentsById(Request $request)
+    public function getCommentsById(Request $request, $id)
     {
         try {
             $validateRequest = Validator::make($request->all(), [
-                'post_id' => 'required|numeric|min:1',
+                'id' => 'required|numeric|min:1',
                 'perPage' => 'nullable|numeric|min:1',
                 'page' => 'nullable|numeric|min:1'
             ]);
@@ -27,7 +27,7 @@ class CommentController extends Controller
                 ], 401);
             }
 
-            $comments = Comment::where('post_id', $request->post_id)->paginate(
+            $comments = Comment::where('post_id', $id)->paginate(
                 perPage: $request->perPage ?? 10,
                 page: $request->page ?? 1,
             );
@@ -85,24 +85,6 @@ class CommentController extends Controller
     {
         try {
             $comment = Comment::find($id);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Comment retrieved successfully',
-                'data' => $comment
-            ], 200);
-        }
-        catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Invalid Request',
-            ], 401);
-        }
-    }
-
-    public function getCommentsByPostId($id)
-    {
-        try {
-            $comment = Comment::where(['post_id'=>$id]);
 
             return response()->json([
                 'status' => true,
