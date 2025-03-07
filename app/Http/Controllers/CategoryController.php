@@ -16,7 +16,6 @@ class CategoryController extends Controller
     {
         try {
             $validateRequest = Validator::make($request->all(), [
-                'category_id' => 'required|numeric|min:1',
                 'perPage' => 'nullable|numeric|min:1',
                 'page' => 'nullable|numeric|min:1'
             ]);
@@ -27,13 +26,12 @@ class CategoryController extends Controller
                 ], 401);
             }
 
-            $category = Category::where('category_id', $request->category_id)->paginate(
+            $category = Category::paginate(
                 perPage: $request->perPage ?? 10,
                 page: $request->page ?? 1,
             );
 
             return response($category);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => 'Invalid Request',
