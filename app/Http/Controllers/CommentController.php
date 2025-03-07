@@ -16,9 +16,9 @@ class CommentController extends Controller
     {
         try {
             $validateRequest = Validator::make($request->all(), [
-                'id' => 'required|numeric|min:1',
                 'perPage' => 'nullable|numeric|min:1',
-                'page' => 'nullable|numeric|min:1'
+                'page' => 'nullable|numeric|min:1',
+                'id' => 'required|numeric|min:1'
             ]);
 
             if ($validateRequest->fails()) {
@@ -44,12 +44,10 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function createCommentByPostId(Request $request, $id)
     {
         try {
             $validateRequest = Validator::make($request->all(), [
-                'post_id' => 'required|numeric|min:1',
-                'user_id' => 'required|numeric|min:1',
                 'content' => 'required|string|min:1'
             ]);
 
@@ -60,7 +58,7 @@ class CommentController extends Controller
             }
 
             Comment::create([
-                'post_id' => $request->post_id,
+                'post_id' => $id,
                 'user_id' => Auth::user()->id,
                 'content' => $request->content
             ]);
@@ -81,7 +79,7 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    /* public function show($id)
     {
         try {
             $comment = Comment::find($id);
@@ -97,7 +95,7 @@ class CommentController extends Controller
                 'message' => 'Invalid Request',
             ], 401);
         }
-    }
+    } */
 
     /**
      * Update the specified resource in storage.

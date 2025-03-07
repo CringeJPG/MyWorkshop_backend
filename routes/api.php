@@ -29,7 +29,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('like/{id}', ['App\Http\Controllers\LikesController', 'destroy']);
 
     Route::get('/comment/{id}', ['App\Http\Controllers\CommentController', 'getCommentsByPostId']);
-    Route::post('/comment', ['App\Http\Controllers\CommentController', 'store']);
+    Route::post('/comment/{id}', ['App\Http\Controllers\CommentController', 'createCommentByPostId']);
     Route::patch('/comment/{id}', ['App\Http\Controllers\CommentController', 'update']);
     Route::delete('/comment/{id}', ['App\Http\Controllers\CommentController', 'destroy']);
 
