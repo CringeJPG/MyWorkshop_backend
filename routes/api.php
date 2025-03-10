@@ -25,6 +25,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/share/{id}', ['App\Http\Controllers\SharesController', 'destroy']);
 
     Route::get('like/{id}', ['App\Http\Controllers\LikesController', 'getLikesById']);
+    Route::get('like/user/{id}', ['App\Http\Controllers\LikesController', 'show']);
     Route::post('like/{id}', ['App\Http\Controllers\LikesController', 'store']);
     Route::delete('like/{id}', ['App\Http\Controllers\LikesController', 'destroy']);
 
