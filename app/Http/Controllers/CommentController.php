@@ -12,13 +12,12 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function getCommentsById(Request $request, $id)
+    public function getCommentsByPostId(Request $request, $id)
     {
         try {
             $validateRequest = Validator::make($request->all(), [
                 'perPage' => 'nullable|numeric|min:1',
-                'page' => 'nullable|numeric|min:1',
-                'id' => 'required|numeric|min:1'
+                'page' => 'nullable|numeric|min:1'
             ]);
 
             if ($validateRequest->fails()) {

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserLikesPost extends Model
 {
-    protected $table = 'user_likes_post';
+    protected $table = 'user_likes_posts';
     protected $fillable = [
         'user_id',
         'post_id'
