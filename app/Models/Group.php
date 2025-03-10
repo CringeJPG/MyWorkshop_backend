@@ -11,8 +11,8 @@ class Group extends Model
     protected $fillable = [
         'user_id',
         "category_id",
+        'image_id',
         'name',
-        'description',
-        'image'
+        'description'
     ];
 }
