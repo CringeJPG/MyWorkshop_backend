@@ -28,7 +28,32 @@ class LikesController extends Controller
         $like->post_id = $id;
         $like->save();
 
-        return response()->json($like);
+        return response()->json([
+            'message' => 'Like successfully',
+        ]);
+    }
+
+    public function show($id)
+    {
+        try {
+            $like = UserLikesPost::where('user_id', Auth::user()->id)->where('post_id', $id)->first();
+
+            if (!$like) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'like not found'
+                ], 200);
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'like found'
+            ], 200);
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Invalid Request',
+            ], 401);
+        }
     }
 
     /**
