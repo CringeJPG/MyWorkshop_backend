@@ -20,7 +20,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::patch('/post/{id}', ['App\Http\Controllers\PostController', 'update']);
     Route::delete('/post/{id}', ['App\Http\Controllers\PostController', 'destroy']);
 
-    Route::get('share/{id}', ['App\Http\Controllers\SharesController', 'getSharesById']);
+    Route::get('share/{id}', ['App\Http\Controllers\SharesController', 'getSharesCountByPostId']);
+    Route::get('share/user/{id}', ['App\Http\Controllers\SharesController', 'getSharedByUserId']);
     Route::post('/share/{id}', ['App\Http\Controllers\SharesController', 'store']);
     Route::delete('/share/{id}', ['App\Http\Controllers\SharesController', 'destroy']);
 
