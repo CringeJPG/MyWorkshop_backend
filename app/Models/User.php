@@ -22,6 +22,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'image_id',
         'name',
         'email',
         'salt',
@@ -34,8 +35,14 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
+        'image_id',
         'password',
         'salt',
         'remember_token',
     ];
+
+    public function image()
+    {
+        return $this->belongsTo(Image::class);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangeUserInfoRequest;
 use App\Http\Requests\DeactivateUserRequest;
+use App\Models\Image;
 use App\Models\User;
 use App\Models\UserFollowsUser;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class UserController extends Controller
 {
     public function getCurrentUser() {
         // Gets user based on the authenticated user from which the request came from.
-        $user = User::where(['id' => Auth::user()->id])->first();
+        $user = User::where(['id' => Auth::user()->id])->with('image')->first();
 
         if ($user) {
             return response()->json($user, 200);
@@ -26,7 +27,7 @@ class UserController extends Controller
 
     public function getUserById($id) {
         // Gets user based on id provided.
-        $user = User::where(['id' => $id])->first();
+        $user = User::where(['id' => $id])->with('image')->first();
 
         if ($user) {
             return response()->json($user, 200);
@@ -36,7 +37,7 @@ class UserController extends Controller
     }
 
     public function changeUserInfo(ChangeUserInfoRequest $request, $id) {
-        $user = User::where(['id' => $id])->first();
+        $user = User::where(['id' => $id])->with('image')->first();
 
         $salt = Str::random(64);
 
@@ -48,6 +49,14 @@ class UserController extends Controller
             if ($request->password) {
                 $user->password = Hash::make($request->password.$salt);
                 $user->salt = $salt;
+            }
+
+            if ($request->image) {
+                $imageId = Image::create([
+                    'base64_data' => base64_encode(file_get_contents($request->file('image')))
+                ])->id;
+
+                $user->image_id = $imageId;
             }
 
             $user->save();
