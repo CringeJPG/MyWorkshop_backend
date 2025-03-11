@@ -95,4 +95,27 @@ class UserController extends Controller
 
         return response()->json(['Could not perform the requested action on user'], 500);
     }
+
+    public function checkIfFollowingUser(Request $request, $id) {
+        // Checks if user is already following user
+        $following = UserFollowsUser::where([
+            'user_id' => Auth::user()->id,
+            'followed_user_id' => $id
+        ])->first();
+
+        if ($following) {
+            return response()->json(true, 200);
+        }
+        else {
+            return response()->json(false, 200);
+        }
+    }
+
+    public function followerCount(Request $request, $id) {
+        $followers = UserFollowsUser::where([
+            'followed_user_id' => $id
+        ])->count();
+
+        return response()->json($followers, 200);
+    }
 }
