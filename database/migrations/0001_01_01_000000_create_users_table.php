@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->boolean('isAdmin')->default(false);
+            $table->string('about_me')->nullable();
+            $table->boolean('is_admin')->default(false);
             $table->string('salt');
             $table->string('password');
             $table->rememberToken();

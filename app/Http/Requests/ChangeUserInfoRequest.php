@@ -31,6 +31,7 @@ class ChangeUserInfoRequest extends FormRequest
         return [
             'name' => 'nullable|string',
             'email' => 'nullable|email|unique:users,email',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png',
             'password' => [
                 'nullable',
                 'confirmed',

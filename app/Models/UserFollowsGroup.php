@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserFollowsGroup extends Model
 {
-    protected $table = 'user_follows_group';
+    protected $table = 'user_follows_groups';
     protected $fillable = [
         'group_id',
         'user_id',
-        "is_admin"
+        'is_admin'
     ];
 }

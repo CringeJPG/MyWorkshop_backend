@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Facades\Validator;
@@ -36,7 +37,7 @@ class PostController extends Controller
                 return response($posts);
             }
             else {
-                $posts = Post::where('user_id', $request->user_id)->paginate(
+                $posts = Post::where('user_id', $request->user_id)->with('image')->paginate(
                     perPage: $request->perPage ?? 10,
                     page: $request->page ?? 1,
                 );
@@ -60,7 +61,8 @@ class PostController extends Controller
             $validateRequest = Validator::make($request->all(), [
                 'title' => 'required|string|min:1',
                 'content' => 'required|string|min:1',
-                'group_id' => 'nullable|numeric|min:1'
+                'group_id' => 'nullable|numeric|min:1',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png',
             ]);
 
             if ($validateRequest->fails()) {
@@ -69,11 +71,16 @@ class PostController extends Controller
                 ], 401);
             }
 
+            $imageId = Image::create([
+                'base64_data' => base64_encode(file_get_contents($request->file('image')))
+            ])->id;
+
             Post::create([
                 'title' => $request->title,
                 'content' => $request->content,
                 'user_id' => Auth::user()->id,
-                'group_id' => $request->group_id
+                'group_id' => $request->group_id,
+                'image_id' => $imageId,
             ]);
 
             return response()->json([
@@ -95,7 +102,7 @@ class PostController extends Controller
     public function show($id)
     {
         try {
-            $post = Post::find($id);
+            $post = Post::with('image')->find($id);
 
             return response()->json([
                 'status' => true,
@@ -119,6 +126,7 @@ class PostController extends Controller
             $validateRequest = Validator::make($request->all(), [
                 'title' => 'nullable|string|min:1',
                 'content' => 'nullable|string|min:1',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png',
             ]);
 
             if ($validateRequest->fails()) {
@@ -135,9 +143,16 @@ class PostController extends Controller
                 ], 401);
             }
 
+            if ($request->file('image')) {
+                $imageId = Image::create([
+                    'base64_data' => base64_encode(file_get_contents($request->file('image')))
+                ])->id;
+            }
+
             $post->update([
                 'title' => $request->title ?? $post->title,
                 'content' => $request->content ?? $post->content,
+                'image_id' => $imageId ?? $post->image_id
             ]);
 
             return response()->json([
