@@ -6,6 +6,7 @@ use App\Http\Requests\ChangeUserInfoRequest;
 use App\Http\Requests\DeactivateUserRequest;
 use App\Models\Image;
 use App\Models\User;
+use App\Models\UserFollowsGroup;
 use App\Models\UserFollowsUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +46,7 @@ class UserController extends Controller
 
             $user->name = $request->name ?? $user->name;
             $user->email = $request->email ?? $user->email;
+            $user->about_me = $request->about_me ?? $user->about_me;
 
             if ($request->password) {
                 $user->password = Hash::make($request->password.$salt);
