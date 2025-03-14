@@ -71,16 +71,19 @@ class PostController extends Controller
                 ], 401);
             }
 
-            $imageId = Image::create([
-                'base64_data' => base64_encode(file_get_contents($request->file('image')))
-            ])->id;
+            $imageId = null;
+            if ($request->file('image')) {
+                $imageId = Image::create([
+                    'base64_data' => base64_encode(file_get_contents($request->file('image')))
+                ])->id;
+            }
 
             Post::create([
                 'title' => $request->title,
                 'content' => $request->content,
                 'user_id' => Auth::user()->id,
                 'group_id' => $request->group_id,
-                'image_id' => $imageId,
+                'image_id' => $imageId ?? null,
             ]);
 
             return response()->json([
