@@ -19,7 +19,8 @@ class PostController extends Controller
             $validateRequest = Validator::make($request->all(), [
                 'perPage' => 'nullable|numeric|min:1',
                 'page' => 'nullable|numeric|min:1',
-                'user_id' => 'nullable|numeric|min:1'
+                'user_id' => 'nullable|numeric|min:1',
+                'group_id' => 'nullable|numeric|min:1',
             ]);
 
             if ($validateRequest->fails()) {
@@ -28,8 +29,16 @@ class PostController extends Controller
                 ], 401);
             }
 
-            if (!$request->user_id) {
-                $posts = Post::paginate(
+            if ($request->group_id) {
+                $posts = Post::where('group_id', $request->group_id)->with('image')->paginate(
+                    perPage: $request->perPage ?? 10,
+                    page: $request->page ?? 1,
+                );
+
+                return response($posts);
+            }
+            else if ($request->user_id) {
+                $posts = Post::where('user_id', $request->user_id)->with('image')->paginate(
                     perPage: $request->perPage ?? 10,
                     page: $request->page ?? 1,
                 );
@@ -37,7 +46,7 @@ class PostController extends Controller
                 return response($posts);
             }
             else {
-                $posts = Post::where('user_id', $request->user_id)->with('image')->paginate(
+                $posts = Post::paginate(
                     perPage: $request->perPage ?? 10,
                     page: $request->page ?? 1,
                 );
