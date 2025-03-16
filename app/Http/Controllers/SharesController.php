@@ -52,15 +52,27 @@ class SharesController extends Controller
      */
     public function store($id)
     {
-        UserSharesPost::create([
-            'user_id' => Auth::user()->id,
-            'post_id' => $id
-        ]);
+        $share = UserSharesPost::where('user_id', Auth::user()->id)->where('post_id', $id)->first();
+
+        if(!$share){
+            UserSharesPost::create([
+                'user_id' => Auth::user()->id,
+                'post_id' => $id
+            ]);
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'Post shared successfully',
+            ], 201);
+        }
+
+        $share->delete();
 
         return response()->json([
             'status' => true,
-            'message' => 'Post shared successfully',
+            'message' => 'Share removed successfully',
         ], 201);
+        
     }
 
     /**
