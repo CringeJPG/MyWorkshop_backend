@@ -3,16 +3,22 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 
-class SignUpRequest extends FormRequest
+class ChangeUserInfoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        // Check if the user making the request is either the owner of the user or an admin.
+        if (Auth::user()->id == $this->id || Auth::user()->isAdmin === true) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -23,10 +29,11 @@ class SignUpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
+            'name' => 'nullable|string',
+            'email' => 'nullable|email|unique:users,email',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png',
             'password' => [
-                'required',
+                'nullable',
                 'confirmed',
                 Password::min(8)
                     ->letters()
